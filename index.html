@@ -397,6 +397,7 @@
     .vs-num-g { font-size: 24px; font-weight: 900; color: #16a34a; margin-bottom: 4px; }
     .vs-num-x { font-size: 24px; font-weight: 900; color: #94a3b8; margin-bottom: 4px; }
     .vs-lbl   { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; }
+    .vs-sub   { font-size: 10px; color: #94a3b8; margin-top: 4px; }
     .vs-sep   { font-size: 14px; font-weight: 900; color: #94a3b8; }
 
     .cta-tile {
@@ -618,13 +619,15 @@
 
           <div class="vs-row">
             <div class="vs-col">
-              <div class="vs-num-g" id="p3YourVal">$0</div>
-              <div class="vs-lbl">Your Monthly Value</div>
+              <div class="vs-num-x" id="p3PartnerVal">$0</div>
+              <div class="vs-lbl">Partner Model</div>
+              <div class="vs-sub">$125 / compaction</div>
             </div>
             <div class="vs-sep">VS</div>
             <div class="vs-col">
-              <div class="vs-num-x">$33,000</div>
-              <div class="vs-lbl">Top-Performer Avg</div>
+              <div class="vs-num-g" id="p3PackmatVal">$0</div>
+              <div class="vs-lbl">Own Your Packmat</div>
+              <div class="vs-sub">$35 / compaction</div>
             </div>
           </div>
 
@@ -709,6 +712,10 @@
     // Calculate on submit (not live)
     const r = calc(compactionsPerDay, revenuePerCompaction, timePerSwap, truckCostPerHour, dailyCharge);
 
+    // Calculate both models for the VS comparison (always uses their volume/revenue/time/truck inputs)
+    const rPartner = calc(compactionsPerDay, revenuePerCompaction, timePerSwap, truckCostPerHour, 125);
+    const rPackmat = calc(compactionsPerDay, revenuePerCompaction, timePerSwap, truckCostPerHour, 35);
+
     const btn = document.getElementById('submitBtn');
     btn.textContent = 'Unlocking…';
     btn.disabled    = true;
@@ -740,11 +747,12 @@
     }
 
     // Populate Phase 3
-    document.getElementById('p3Total').textContent   = fmt(r.total);
-    document.getElementById('p3Hours').textContent   = Math.round(r.hours);
-    document.getElementById('p3Savings').textContent = fmt(r.savings);
-    document.getElementById('p3Profit').textContent  = fmt(r.profit);
-    document.getElementById('p3YourVal').textContent = fmt(r.total);
+    document.getElementById('p3Total').textContent      = fmt(r.total);
+    document.getElementById('p3Hours').textContent      = Math.round(r.hours);
+    document.getElementById('p3Savings').textContent    = fmt(r.savings);
+    document.getElementById('p3Profit').textContent     = fmt(r.profit);
+    document.getElementById('p3PartnerVal').textContent = fmt(rPartner.total);
+    document.getElementById('p3PackmatVal').textContent = fmt(rPackmat.total);
 
     btn.textContent = 'Unlock My Results →';
     btn.disabled    = false;
