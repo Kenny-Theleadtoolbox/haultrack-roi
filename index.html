@@ -4,13 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ROI Calculator — HaulTrack</title>
+  <link rel="preconnect" href="https://fonts.cdnfonts.com" />
+  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/mona-sans" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Mona Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       background: #f8fafc;
-      color: #1e293b;
+      color: #1D1D1D;
       line-height: 1.5;
     }
 
@@ -21,7 +23,7 @@
 
     /* ══ PHASE 1 ══ */
     .hero-card {
-      background: #0a122a;
+      background: #1D1D1D;
       border-radius: 16px;
       padding: 48px;
       text-align: center;
@@ -32,9 +34,9 @@
 
     .badge {
       display: inline-block;
-      background: rgba(34,197,94,0.15);
-      color: #22c55e;
-      border: 1px solid rgba(34,197,94,0.3);
+      background: rgba(234,118,36,0.15);
+      color: #EA7624;
+      border: 1px solid rgba(234,118,36,0.3);
       border-radius: 999px;
       padding: 6px 16px;
       font-size: 11px;
@@ -81,11 +83,11 @@
       margin-bottom: 4px;
     }
     .stat-val { font-size: 24px; font-weight: 800; color: #fff; }
-    .stat-val.green { color: #22c55e; }
+    .stat-val.green { color: #EA7624; }
 
     .hero-result {
-      background: rgba(34,197,94,0.1);
-      border: 1px solid rgba(34,197,94,0.25);
+      background: rgba(234,118,36,0.1);
+      border: 1px solid rgba(234,118,36,0.25);
       border-radius: 12px;
       padding: 32px;
       margin-bottom: 32px;
@@ -101,7 +103,7 @@
     .hero-result-big {
       font-size: clamp(52px, 8vw, 64px);
       font-weight: 900;
-      color: #22c55e;
+      color: #EA7624;
       line-height: 1;
       margin-bottom: 8px;
     }
@@ -111,7 +113,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #22c55e;
+      background: #EA7624;
       color: #fff;
       border: none;
       border-radius: 12px;
@@ -122,7 +124,7 @@
       transition: background 0.15s;
       font-family: inherit;
     }
-    .btn-green:hover { background: #16a34a; }
+    .btn-green:hover { background: #DE5D0A; }
 
     .hint-line {
       font-size: 11px;
@@ -140,7 +142,7 @@
     }
 
     .card-header {
-      background: #0a122a;
+      background: #1D1D1D;
       padding: 32px;
       color: #fff;
     }
@@ -191,7 +193,7 @@
       padding: 9px 12px;
       font-size: 14px;
       background: #f8fafc;
-      color: #1e293b;
+      color: #1D1D1D;
       outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
       font-family: inherit;
@@ -199,8 +201,8 @@
       -webkit-appearance: none;
     }
     input:focus, select:focus {
-      border-color: #64748b;
-      box-shadow: 0 0 0 3px rgba(100,116,139,0.12);
+      border-color: #0026FF;
+      box-shadow: 0 0 0 3px rgba(0,38,255,0.12);
       background: #fff;
     }
 
@@ -232,9 +234,9 @@
       margin-top: 6px;
       font-size: 12px;
       font-weight: 700;
-      color: #16a34a;
-      background: rgba(34,197,94,0.08);
-      border: 1px solid rgba(34,197,94,0.2);
+      color: #DE5D0A;
+      background: rgba(234,118,36,0.08);
+      border: 1px solid rgba(234,118,36,0.2);
       border-radius: 6px;
       padding: 3px 10px;
     }
@@ -276,12 +278,12 @@
     }
     .live-row:last-child { padding-bottom: 0; border-bottom: none; margin-bottom: 0; }
     .live-row .lbl { color: #475569; }
-    .c-green { font-weight: 700; color: #16a34a; }
-    .c-dark  { font-weight: 700; color: #1e293b; }
+    .c-green { font-weight: 700; color: #DE5D0A; }
+    .c-dark  { font-weight: 700; color: #1D1D1D; }
     .c-red   { font-weight: 700; color: #ef4444; }
 
     .total-strip {
-      background: #0a122a;
+      background: #1D1D1D;
       border-radius: 12px;
       padding: 20px;
       display: flex;
@@ -290,7 +292,7 @@
       margin-bottom: 20px;
     }
     .total-strip .lbl { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); }
-    .total-strip .val { font-size: 30px; font-weight: 900; color: #22c55e; }
+    .total-strip .val { font-size: 30px; font-weight: 900; color: #EA7624; }
 
     .lock-overlay {
       position: absolute;
@@ -308,7 +310,7 @@
       pointer-events: none;
     }
     .lock-icon { font-size: 36px; }
-    .lock-title { font-size: 16px; font-weight: 800; color: #0a122a; }
+    .lock-title { font-size: 16px; font-weight: 800; color: #1D1D1D; }
     .lock-sub { font-size: 13px; color: #64748b; max-width: 200px; }
 
     .btn-dark {
@@ -316,7 +318,7 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      background: #0a122a;
+      background: #1D1D1D;
       color: #fff;
       border: none;
       border-radius: 12px;
@@ -329,7 +331,7 @@
       position: relative;
       z-index: 20;
     }
-    .btn-dark:hover:not(:disabled) { background: #1e293b; }
+    .btn-dark:hover:not(:disabled) { background: #333333; }
     .btn-dark:disabled { opacity: 0.65; cursor: not-allowed; }
     .privacy {
       font-size: 11px;
@@ -342,7 +344,7 @@
 
     /* ══ PHASE 3 ══ */
     .result-hdr {
-      background: #0a122a;
+      background: #1D1D1D;
       padding: 48px;
       text-align: center;
       color: #fff;
@@ -352,18 +354,18 @@
     .check-ring {
       width: 56px;
       height: 56px;
-      background: rgba(34,197,94,0.15);
-      border: 2px solid #22c55e;
+      background: rgba(234,118,36,0.15);
+      border: 2px solid #EA7624;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 20px;
-      color: #22c55e;
+      color: #EA7624;
     }
 
     .result-sub  { font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
-    .result-big  { font-size: clamp(52px, 8vw, 64px); font-weight: 900; color: #22c55e; line-height: 1; margin-bottom: 8px; }
+    .result-big  { font-size: clamp(52px, 8vw, 64px); font-weight: 900; color: #EA7624; line-height: 1; margin-bottom: 8px; }
     .result-foot { font-size: 13px; color: rgba(255,255,255,0.4); }
 
     .result-body { padding: 40px; }
@@ -378,7 +380,7 @@
     @media (min-width: 560px) { .kpi-row { grid-template-columns: repeat(3, 1fr); } }
 
     .kpi-tile { background: #f1f5f9; border-radius: 12px; padding: 20px; text-align: center; }
-    .kpi-num  { font-size: 24px; font-weight: 900; color: #0a122a; margin-bottom: 4px; }
+    .kpi-num  { font-size: 24px; font-weight: 900; color: #1D1D1D; margin-bottom: 4px; }
     .kpi-lbl  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; }
 
     .vs-row {
@@ -394,14 +396,14 @@
     @media (min-width: 560px) { .vs-row { flex-direction: row; gap: 24px; } }
 
     .vs-col { flex: 1; text-align: center; }
-    .vs-num-g { font-size: 24px; font-weight: 900; color: #16a34a; margin-bottom: 4px; }
+    .vs-num-g { font-size: 24px; font-weight: 900; color: #DE5D0A; margin-bottom: 4px; }
     .vs-num-x { font-size: 24px; font-weight: 900; color: #94a3b8; margin-bottom: 4px; }
     .vs-lbl   { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; }
     .vs-sub   { font-size: 10px; color: #94a3b8; margin-top: 4px; }
     .vs-sep   { font-size: 14px; font-weight: 900; color: #94a3b8; }
 
     .cta-tile {
-      background: #0a122a;
+      background: #1D1D1D;
       border-radius: 12px;
       padding: 32px;
       text-align: center;
@@ -413,7 +415,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #22c55e;
+      background: #EA7624;
       color: #fff;
       border-radius: 12px;
       padding: 16px 32px;
@@ -422,7 +424,7 @@
       text-decoration: none;
       transition: background 0.15s;
     }
-    .cta-link:hover { background: #16a34a; }
+    .cta-link:hover { background: #DE5D0A; }
   </style>
 </head>
 <body>
