@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROI Calculator — HaulTrack</title>
+  <script src="config.js"></script>
+  <style>
+    /* === RESET & BASE === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.5;
+    }
+
+    /* === LAYOUT === */
+    .page-wrap { min-height: 100vh; padding: 48px 16px; }
+    .max-w { max-width: 896px; margin: 0 auto; }
+
+    .phase { display: none; }
+    .phase.active { display: block; }
+
+    /* ══════════════════════════════════════════
+       PHASE 1 — HERO
+    ══════════════════════════════════════════ */
+    .hero-card {
+      background: #0a122a;
+      border-radius: 16px;
+      padding: 48px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    @media (max-width: 600px) { .hero-card { padding: 32px 24px; } }
+
+    .badge {
+      display: inline-block;
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero-h1 {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-sub {
+      color: rgba(255,255,255,0.6);
+      font-size: 16px;
+      margin-bottom: 40px;
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+      text-align: left;
+    }
+    @media (min-width: 560px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .stat-tile {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .stat-lbl {
+      display: block;
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .stat-val { font-size: 24px; font-weight: 800; color: #fff; }
+    .stat-val.green { color: #22c55e; }
+
+    /* Hero result box */
+    .hero-result {
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+    .hero-result-lbl {
+      display: block;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .hero-result-big {
+      font-size: clamp(52px, 8vw, 64px);
+      font-weight: 900;
+      color: #22c55e;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .hero-result-note { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+    /* Buttons */
+    .btn-green {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #22c55e;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 18px 32px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+    .btn-green:hover { background: #16a34a; }
+
+    .hint-line {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      margin-top: 16px;
+    }
+
+    .btn-dark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background: #0a122a;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 18px 24px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+    .btn-dark:hover:not(:disabled) { background: #1e293b; }
+    .btn-dark:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    /* ══════════════════════════════════════════
+       PHASE 2 — FORM + LIVE CALC
+    ══════════════════════════════════════════ */
+    .form-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      border: 1px solid #e2e8f0;
+    }
+
+    .card-header {
+      background: #0a122a;
+      padding: 32px;
+      color: #fff;
+    }
+    .card-header h2 { font-size: 24px; font-weight: 900; margin-bottom: 4px; }
+    .card-header p  { font-size: 14px; color: rgba(255,255,255,0.6); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+
+    .form-left {
+      padding: 32px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    @media (min-width: 768px) { .form-left { border-bottom: none; border-right: 1px solid #e2e8f0; } }
+
+    .form-right { padding: 32px; background: #f8fafc; }
+
+    .sec-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+
+    .field-sec { margin-bottom: 24px; }
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"] {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-size: 14px;
+      background: #f8fafc;
+      color: #1e293b;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      font-family: inherit;
+    }
+    input:focus {
+      border-color: #64748b;
+      box-shadow: 0 0 0 3px rgba(100,116,139,0.12);
+      background: #fff;
+    }
+
+    .pfx-wrap { position: relative; }
+    .pfx-wrap .pfx {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 14px;
+      pointer-events: none;
+      user-select: none;
+    }
+    .pfx-wrap input { padding-left: 28px; }
+
+    /* Live results panel */
+    .live-box {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    .live-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 10px;
+    }
+    .live-row:last-child { padding-bottom: 0; border-bottom: none; margin-bottom: 0; }
+    .live-row .lbl { color: #475569; }
+    .c-green { font-weight: 700; color: #16a34a; }
+    .c-dark  { font-weight: 700; color: #1e293b; }
+    .c-red   { font-weight: 700; color: #ef4444; }
+
+    .total-strip {
+      background: #0a122a;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .total-strip .lbl { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); }
+    .total-strip .val { font-size: 30px; font-weight: 900; color: #22c55e; }
+
+    .privacy { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 14px; }
+
+    /* ══════════════════════════════════════════
+       PHASE 3 — RESULTS
+    ══════════════════════════════════════════ */
+    .result-hdr {
+      background: #0a122a;
+      padding: 48px;
+      text-align: center;
+      color: #fff;
+    }
+    @media (max-width: 600px) { .result-hdr { padding: 32px 24px; } }
+
+    .check-ring {
+      width: 56px;
+      height: 56px;
+      background: rgba(34,197,94,0.15);
+      border: 2px solid #22c55e;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: #22c55e;
+    }
+
+    .result-sub  { font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+    .result-big  { font-size: clamp(52px, 8vw, 64px); font-weight: 900; color: #22c55e; line-height: 1; margin-bottom: 8px; }
+    .result-foot { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+    .result-body { padding: 40px; }
+    @media (max-width: 600px) { .result-body { padding: 24px 20px; } }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    @media (min-width: 560px) { .kpi-row { grid-template-columns: repeat(3, 1fr); } }
+
+    .kpi-tile { background: #f1f5f9; border-radius: 12px; padding: 20px; text-align: center; }
+    .kpi-num  { font-size: 24px; font-weight: 900; color: #0a122a; margin-bottom: 4px; }
+    .kpi-lbl  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; }
+
+    .vs-row {
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    @media (min-width: 560px) { .vs-row { flex-direction: row; gap: 24px; } }
+
+    .vs-col { flex: 1; text-align: center; }
+    .vs-num-g { font-size: 24px; font-weight: 900; color: #16a34a; margin-bottom: 4px; }
+    .vs-num-x { font-size: 24px; font-weight: 900; color: #94a3b8; margin-bottom: 4px; }
+    .vs-lbl   { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #64748b; }
+    .vs-sep   { font-size: 14px; font-weight: 900; color: #94a3b8; }
+
+    .cta-tile {
+      background: #0a122a;
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      color: #fff;
+    }
+    .cta-tile h3 { font-size: 20px; font-weight: 900; margin-bottom: 8px; }
+    .cta-tile p  {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      max-width: 480px;
+      margin: 0 auto 24px;
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #22c55e;
+      color: #fff;
+      border-radius: 12px;
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .cta-link:hover { background: #16a34a; }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="max-w">
+
+      <!-- ════════════════════════════════
+           PHASE 1 — HERO / PREVIEW
+      ════════════════════════════════ -->
+      <div class="phase active" id="phase1">
+        <div class="hero-card">
+          <span class="badge">⚡ Free ROI Calculator</span>
+
+          <h1 class="hero-h1">
+            How Much Is Your Swap Route<br>Really Costing You?
+          </h1>
+          <p class="hero-sub">
+            See what haulers with your profile generate monthly — using industry-average numbers below.
+          </p>
+
+          <div class="stats-grid">
+            <div class="stat-tile">
+              <span class="stat-lbl">Swaps / Day</span>
+              <strong class="stat-val">10</strong>
+            </div>
+            <div class="stat-tile">
+              <span class="stat-lbl">Could Be Compacted</span>
+              <strong class="stat-val">6</strong>
+            </div>
+            <div class="stat-tile">
+              <span class="stat-lbl">Revenue / Compaction</span>
+              <strong class="stat-val green">$200</strong>
+            </div>
+            <div class="stat-tile">
+              <span class="stat-lbl">Time / Swap</span>
+              <strong class="stat-val">1 hr</strong>
+            </div>
+            <div class="stat-tile">
+              <span class="stat-lbl">Truck + Labor / Hr</span>
+              <strong class="stat-val">$150</strong>
+            </div>
+            <div class="stat-tile">
+              <span class="stat-lbl">Compaction Cost per Compaction</span>
+              <strong class="stat-val">$100</strong>
+            </div>
+          </div>
+
+          <div class="hero-result">
+            <span class="hero-result-lbl">Estimated Monthly Value — Industry Average</span>
+            <div class="hero-result-big" id="defaultTotal">$33,000</div>
+            <div class="hero-result-note">Based on 22 working days/month · Your number may be higher</div>
+          </div>
+
+          <button class="btn-green" onclick="goPhase(2)">
+            Calculate MY Numbers
+            <!-- Arrow Right icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </button>
+
+          <div class="hint-line">60 seconds · No credit card · No spam</div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════
+           PHASE 2 — FORM + LIVE CALC
+      ════════════════════════════════ -->
+      <div class="phase" id="phase2">
+        <div class="form-card">
+          <div class="card-header">
+            <h2>Calculate YOUR Numbers</h2>
+            <p>Enter your info + your real numbers. Your personalized result updates live as you type.</p>
+          </div>
+
+          <form id="roiForm" onsubmit="handleSubmit(event)">
+            <div class="form-grid">
+
+              <!-- LEFT: Info + Inputs -->
+              <div class="form-left">
+
+                <!-- Your Info -->
+                <div class="field-sec">
+                  <div class="sec-title">Your Info</div>
+                  <div class="g2">
+                    <div class="field">
+                      <label for="fFirstName">First Name *</label>
+                      <input type="text" id="fFirstName" placeholder="John"
+                             required autocomplete="given-name" />
+                    </div>
+                    <div class="field">
+                      <label for="fLastName">Last Name</label>
+                      <input type="text" id="fLastName" placeholder="Smith"
+                             autocomplete="family-name" />
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="fCompany">Company Name *</label>
+                    <input type="text" id="fCompany" placeholder="Smith Hauling Co."
+                           required autocomplete="organization" />
+                  </div>
+                  <div class="field">
+                    <label for="fEmail">Email *</label>
+                    <input type="email" id="fEmail" placeholder="john@smithhauling.com"
+                           required autocomplete="email" />
+                  </div>
+                  <div class="field">
+                    <label for="fPhone">Phone *</label>
+                    <input type="tel" id="fPhone" placeholder="(555) 000-0000"
+                           required autocomplete="tel" />
+                  </div>
+                </div>
+
+                <!-- Your Numbers -->
+                <div class="field-sec">
+                  <div class="sec-title">Your Numbers</div>
+                  <div class="g2">
+                    <div class="field">
+                      <label for="nSwaps">Swaps / Day</label>
+                      <input type="number" id="nSwaps" min="0" value="10" oninput="liveCalc()" />
+                    </div>
+                    <div class="field">
+                      <label for="nCompact">Could Be Compacted / Day</label>
+                      <input type="number" id="nCompact" min="0" value="6" oninput="liveCalc()" />
+                    </div>
+                  </div>
+                  <div class="g2">
+                    <div class="field">
+                      <label for="nRev">Revenue / Compaction ($)</label>
+                      <div class="pfx-wrap">
+                        <span class="pfx">$</span>
+                        <input type="number" id="nRev" min="0" value="200" oninput="liveCalc()" />
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label for="nTime">Time / Swap (hrs)</label>
+                      <input type="number" id="nTime" min="0" step="0.25" value="1" oninput="liveCalc()" />
+                    </div>
+                  </div>
+                  <div class="g2">
+                    <div class="field">
+                      <label for="nTruck">Truck + Labor / Hr ($)</label>
+                      <div class="pfx-wrap">
+                        <span class="pfx">$</span>
+                        <input type="number" id="nTruck" min="0" value="150" oninput="liveCalc()" />
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label for="nCharge">Compaction cost per compaction ($)</label>
+                      <div class="pfx-wrap">
+                        <span class="pfx">$</span>
+                        <input type="number" id="nCharge" min="0" value="100" oninput="liveCalc()" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div><!-- /form-left -->
+
+              <!-- RIGHT: Live Results -->
+              <div class="form-right">
+                <div class="sec-title">Live Results — Monthly</div>
+
+                <div class="live-box">
+                  <div class="live-row">
+                    <span class="lbl">Compaction Fees</span>
+                    <span class="c-green" id="rFees">$26,400</span>
+                  </div>
+                  <div class="live-row">
+                    <span class="lbl">Truck Hours Saved</span>
+                    <span class="c-dark" id="rHours">132.0 hrs</span>
+                  </div>
+                  <div class="live-row">
+                    <span class="lbl">Cost Savings</span>
+                    <span class="c-green" id="rSavings">$19,800</span>
+                  </div>
+                  <div class="live-row">
+                    <span class="lbl">Compaction Cost</span>
+                    <span class="c-red" id="rCost">-$13,200</span>
+                  </div>
+                  <div class="live-row">
+                    <span class="lbl">Compaction Profit</span>
+                    <span class="c-green" id="rProfit">$13,200</span>
+                  </div>
+                </div>
+
+                <div class="total-strip">
+                  <span class="lbl">Total Monthly Value</span>
+                  <span class="val" id="rTotal">$33,000</span>
+                </div>
+
+                <button type="submit" class="btn-dark" id="submitBtn">
+                  Get My Full Results →
+                </button>
+                <div class="privacy">🔒 Your info stays private. No spam, ever.</div>
+              </div>
+
+            </div><!-- /form-grid -->
+          </form>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════
+           PHASE 3 — PERSONALISED RESULTS
+      ════════════════════════════════ -->
+      <div class="phase" id="phase3">
+        <div class="form-card">
+
+          <div class="result-hdr">
+            <div class="check-ring">
+              <!-- CheckCircle2 icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <p class="result-sub">Your Estimated Monthly Value</p>
+            <div class="result-big" id="p3Total">$33,000</div>
+            <div class="result-foot">Based on your numbers · 22 working days/month</div>
+          </div>
+
+          <div class="result-body">
+
+            <!-- KPI tiles -->
+            <div class="kpi-row">
+              <div class="kpi-tile">
+                <div class="kpi-num" id="p3Hours">132</div>
+                <div class="kpi-lbl">Truck Hours Saved</div>
+              </div>
+              <div class="kpi-tile">
+                <div class="kpi-num" id="p3Savings">$19,800</div>
+                <div class="kpi-lbl">Cost Savings</div>
+              </div>
+              <div class="kpi-tile">
+                <div class="kpi-num" id="p3Profit">$13,200</div>
+                <div class="kpi-lbl">Compaction Profit</div>
+              </div>
+            </div>
+
+            <!-- Your Value vs Top-Performer -->
+            <div class="vs-row">
+              <div class="vs-col">
+                <div class="vs-num-g" id="p3YourVal">$33,000</div>
+                <div class="vs-lbl">Your Monthly Value</div>
+              </div>
+              <div class="vs-sep">VS</div>
+              <div class="vs-col">
+                <div class="vs-num-x">$24,200</div>
+                <div class="vs-lbl">Top-Performer Avg</div>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-tile">
+              <h3>Ready to Capture This Every Month?</h3>
+              <p>
+                Our team will map this directly to your routes and show you
+                the exact playbook to get here.
+              </p>
+              <a href="#calendar" class="cta-link">
+                Book Your Free Route Analysis
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+
+          </div><!-- /result-body -->
+        </div>
+      </div>
+
+    </div><!-- /.max-w -->
+  </div><!-- /.page-wrap -->
+
+  <script>
+    // ─────────────────────────────────────────────────
+    // CONSTANTS
+    // ─────────────────────────────────────────────────
+    const DAYS = 22;
+
+    // ─────────────────────────────────────────────────
+    // DATA ISOLATION  (mirrors src/lib/data-isolation.ts)
+    // URL param:  ?pid=PARTNER_ID  or  ?partnerId=PARTNER_ID
+    // All localStorage keys are namespaced per partner.
+    // ─────────────────────────────────────────────────
+    const _params    = new URLSearchParams(window.location.search);
+    const _pid       = _params.get('pid') || _params.get('partnerId') || null;
+    const _ns        = k => _pid ? `ht_${_pid}__${k}` : `ht_global__${k}`;
+
+    const store = {
+      get(k, fb = null) {
+        try { const v = localStorage.getItem(_ns(k)); return v !== null ? JSON.parse(v) : fb; } catch { return fb; }
+      },
+      set(k, v) {
+        try { localStorage.setItem(_ns(k), JSON.stringify(v)); } catch (e) { console.error('[ROI]', e); }
+      }
+    };
+
+    // ─────────────────────────────────────────────────
+    // CALCULATOR  (mirrors calculateResults() in Index.tsx)
+    // ─────────────────────────────────────────────────
+    function calc(comp, rev, time, truck, charge) {
+      const fees    = comp * rev    * DAYS;   // compaction revenue
+      const hours   = comp * time   * DAYS;   // truck hours freed
+      const savings = hours * truck;           // cost savings
+      const cost    = comp * charge * DAYS;   // compaction service cost
+      const profit  = fees - cost;             // net compaction profit
+      const total   = profit + savings;        // grand total value
+      return { fees, hours, savings, cost, profit, total };
+    }
+
+    const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
+
+    // ─────────────────────────────────────────────────
+    // INIT: phase-1 default total
+    // ─────────────────────────────────────────────────
+    const defR = calc(6, 200, 1, 150, 100);
+    document.getElementById('defaultTotal').textContent = fmt(defR.total);
+
+    let live = { ...defR }; // tracks latest calc result
+
+    // ─────────────────────────────────────────────────
+    // LIVE CALCULATION — called on every input event
+    // ─────────────────────────────────────────────────
+    function liveCalc() {
+      const comp   = +document.getElementById('nCompact').value || 0;
+      const rev    = +document.getElementById('nRev').value     || 0;
+      const time   = +document.getElementById('nTime').value    || 0;
+      const truck  = +document.getElementById('nTruck').value   || 0;
+      const charge = +document.getElementById('nCharge').value  || 0;
+
+      live = calc(comp, rev, time, truck, charge);
+
+      document.getElementById('rFees').textContent    = fmt(live.fees);
+      document.getElementById('rHours').textContent   = live.hours.toFixed(1) + ' hrs';
+      document.getElementById('rSavings').textContent = fmt(live.savings);
+      document.getElementById('rCost').textContent    = '-' + fmt(live.cost);
+      document.getElementById('rProfit').textContent  = fmt(live.profit);
+      document.getElementById('rTotal').textContent   = fmt(live.total);
+    }
+
+    // ─────────────────────────────────────────────────
+    // PHASE NAVIGATION
+    // ─────────────────────────────────────────────────
+    function goPhase(n) {
+      document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+      document.getElementById('phase' + n).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ─────────────────────────────────────────────────
+    // FORM SUBMIT — create GHL contact + note, then phase 3
+    // ─────────────────────────────────────────────────
+    async function handleSubmit(e) {
+      e.preventDefault();
+
+      const firstName   = document.getElementById('fFirstName').value.trim();
+      const lastName    = document.getElementById('fLastName').value.trim();
+      const companyName = document.getElementById('fCompany').value.trim();
+      const email       = document.getElementById('fEmail').value.trim();
+      const phone       = document.getElementById('fPhone').value.trim();
+      const swapsPerDay = +document.getElementById('nSwaps').value   || 0;
+      const compact     = +document.getElementById('nCompact').value || 0;
+      const rev         = +document.getElementById('nRev').value     || 0;
+      const time        = +document.getElementById('nTime').value    || 0;
+      const truck       = +document.getElementById('nTruck').value   || 0;
+      const charge      = +document.getElementById('nCharge').value  || 0;
+
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = 'Submitting…';
+      btn.disabled    = true;
+
+      // ── GHL: create contact ──────────────────────
+      try {
+        const cRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${config.subaccountToken}`,
+            'Version':        '2021-07-28',
+            'Content-Type':  'application/json',
+            'Accept':        'application/json'
+          },
+          body: JSON.stringify({
+            locationId:  config.locationId,
+            firstName,
+            lastName,
+            name:        [firstName, lastName].filter(Boolean).join(' '),
+            companyName,
+            email,
+            phone,
+            source:      'ROI Calculator'
+          })
+        });
+
+        if (cRes.ok) {
+          const cData     = await cRes.json();
+          const contactId = cData.contact?.id;
+
+          // ── GHL: attach calculator results as a note ──
+          if (contactId) {
+            const noteBody = [
+              '📊 ROI Calculator Submission',
+              '──────────────────────────────',
+              `Swaps/Day:                  ${swapsPerDay}`,
+              `Could Be Compacted/Day:     ${compact}`,
+              `Revenue/Compaction:         $${rev}`,
+              `Time/Swap:                  ${time} hr`,
+              `Truck + Labor/Hr:           $${truck}`,
+              `Compaction Cost/Compaction: $${charge}`,
+              '──────────────────────────────',
+              `Compaction Fees:    ${fmt(live.fees)}/mo`,
+              `Truck Hours Saved:  ${live.hours.toFixed(1)} hrs/mo`,
+              `Cost Savings:       ${fmt(live.savings)}/mo`,
+              `Compaction Cost:   -${fmt(live.cost)}/mo`,
+              `Compaction Profit:  ${fmt(live.profit)}/mo`,
+              `TOTAL VALUE:        ${fmt(live.total)}/mo`,
+              '──────────────────────────────',
+              `Partner ID: ${_pid || 'none'}`
+            ].join('\n');
+
+            await fetch(
+              `https://services.leadconnectorhq.com/contacts/${contactId}/notes`,
+              {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${config.subaccountToken}`,
+                  'Version':       '2021-07-28',
+                  'Content-Type': 'application/json',
+                  'Accept':       'application/json'
+                },
+                body: JSON.stringify({
+                  body:   noteBody,
+                  userId: config.userId
+                })
+              }
+            );
+          }
+        } else {
+          console.warn('[ROI] GHL contact create failed:', cRes.status, await cRes.text());
+        }
+      } catch (err) {
+        // Never block the user on API failures — always proceed to results
+        console.error('[ROI] Submit error:', err);
+      }
+
+      // ── Persist to isolated localStorage ──────────
+      store.set('lastSubmission', {
+        firstName, lastName, companyName, email, phone,
+        swapsPerDay, compact, rev, time, truck, charge,
+        results:     live,
+        submittedAt: new Date().toISOString()
+      });
+
+      // ── Populate phase-3 display ──────────────────
+      document.getElementById('p3Total').textContent   = fmt(live.total);
+      document.getElementById('p3Hours').textContent   = Math.round(live.hours);
+      document.getElementById('p3Savings').textContent = fmt(live.savings);
+      document.getElementById('p3Profit').textContent  = fmt(live.profit);
+      document.getElementById('p3YourVal').textContent = fmt(live.total);
+
+      btn.textContent = 'Get My Full Results →';
+      btn.disabled    = false;
+
+      goPhase(3);
+    }
+
+    // ── Seed live calc on page load ───────────────────
+    liveCalc();
+  </script>
+</body>
+</html>
