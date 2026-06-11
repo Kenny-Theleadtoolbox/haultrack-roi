@@ -23,7 +23,7 @@
 
     /* ══ PHASE 1 ══ */
     .hero-card {
-      background: #1D1D1D;
+      background: #0026FF;
       border-radius: 16px;
       padding: 48px;
       text-align: center;
@@ -34,9 +34,9 @@
 
     .badge {
       display: inline-block;
-      background: rgba(234,118,36,0.15);
+      background: rgba(234,118,36,0.2);
       color: #EA7624;
-      border: 1px solid rgba(234,118,36,0.3);
+      border: 1px solid rgba(234,118,36,0.4);
       border-radius: 999px;
       padding: 6px 16px;
       font-size: 11px;
@@ -51,10 +51,11 @@
       font-weight: 900;
       line-height: 1.2;
       margin-bottom: 12px;
+      color: #fff;
     }
 
     .hero-sub {
-      color: rgba(255,255,255,0.6);
+      color: rgba(255,255,255,0.75);
       font-size: 16px;
       margin-bottom: 40px;
     }
@@ -69,15 +70,15 @@
     @media (min-width: 560px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
 
     .stat-tile {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
       border-radius: 12px;
       padding: 16px;
     }
     .stat-lbl {
       display: block;
       font-size: 11px;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.55);
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 4px;
@@ -86,8 +87,8 @@
     .stat-val.green { color: #EA7624; }
 
     .hero-result {
-      background: rgba(234,118,36,0.1);
-      border: 1px solid rgba(234,118,36,0.25);
+      background: rgba(234,118,36,0.12);
+      border: 1px solid rgba(234,118,36,0.35);
       border-radius: 12px;
       padding: 32px;
       margin-bottom: 32px;
@@ -95,7 +96,7 @@
     .hero-result-lbl {
       display: block;
       font-size: 11px;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.6);
       text-transform: uppercase;
       letter-spacing: 0.1em;
       margin-bottom: 8px;
@@ -107,7 +108,7 @@
       line-height: 1;
       margin-bottom: 8px;
     }
-    .hero-result-note { font-size: 13px; color: rgba(255,255,255,0.4); }
+    .hero-result-note { font-size: 13px; color: rgba(255,255,255,0.5); }
 
     .btn-green {
       display: inline-flex;
@@ -128,7 +129,7 @@
 
     .hint-line {
       font-size: 11px;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.4);
       margin-top: 16px;
     }
 
@@ -165,7 +166,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: #94a3b8;
+      color: #1D1D1D;
       margin-bottom: 16px;
     }
 
@@ -177,8 +178,8 @@
     label {
       display: block;
       font-size: 14px;
-      font-weight: 500;
-      color: #475569;
+      font-weight: 600;
+      color: #1D1D1D;
       margin-bottom: 6px;
     }
 
@@ -277,7 +278,7 @@
       margin-bottom: 10px;
     }
     .live-row:last-child { padding-bottom: 0; border-bottom: none; margin-bottom: 0; }
-    .live-row .lbl { color: #475569; }
+    .live-row .lbl { color: #1D1D1D; }
     .c-green { font-weight: 700; color: #DE5D0A; }
     .c-dark  { font-weight: 700; color: #1D1D1D; }
     .c-red   { font-weight: 700; color: #ef4444; }
