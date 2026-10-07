@@ -446,15 +446,15 @@
         <div class="stats-grid">
           <div class="stat-tile"><span class="stat-lbl">Rotations / jour</span><strong class="stat-val">10</strong></div>
           <div class="stat-tile"><span class="stat-lbl">Compactables</span><strong class="stat-val">6</strong></div>
-          <div class="stat-tile"><span class="stat-lbl">Revenu / compactage</span><strong class="stat-val green">$200</strong></div>
+          <div class="stat-tile"><span class="stat-lbl">Revenu / compactage</span><strong class="stat-val green">200 $US</strong></div>
           <div class="stat-tile"><span class="stat-lbl">Temps / rotation</span><strong class="stat-val">1 h</strong></div>
-          <div class="stat-tile"><span class="stat-lbl">Camion + main-d'œuvre / h</span><strong class="stat-val">$150</strong></div>
-          <div class="stat-tile"><span class="stat-lbl">Coût par compactage</span><strong class="stat-val">$100</strong></div>
+          <div class="stat-tile"><span class="stat-lbl">Camion + main-d'œuvre / h</span><strong class="stat-val">150 $US</strong></div>
+          <div class="stat-tile"><span class="stat-lbl">Coût par compactage</span><strong class="stat-val">100 $US</strong></div>
         </div>
 
         <div class="hero-result">
           <span class="hero-result-lbl">Valeur mensuelle estimée — moyenne du secteur</span>
-          <div class="hero-result-big" id="defaultTotal">$33,000</div>
+          <div class="hero-result-big" id="defaultTotal">33 000 $US</div>
           <div class="hero-result-note">Sur la base de 22 jours ouvrés/mois · Votre chiffre pourrait être plus élevé</div>
         </div>
 
@@ -524,7 +524,7 @@
                 </div>
                 <div class="g2">
                   <div class="field">
-                    <label for="nRev">Revenu / compactage ($)</label>
+                    <label for="nRev">Revenu / compactage ($US)</label>
                     <div class="pfx-wrap">
                       <span class="pfx">$</span>
                       <input type="number" id="nRev" min="0" value="200" />
@@ -537,7 +537,7 @@
                 </div>
                 <div class="g2">
                   <div class="field">
-                    <label for="nTruck">Camion + main-d'œuvre / h ($)</label>
+                    <label for="nTruck">Camion + main-d'œuvre / h ($US)</label>
                     <div class="pfx-wrap">
                       <span class="pfx">$</span>
                       <input type="number" id="nTruck" min="0" value="150" />
@@ -547,11 +547,11 @@
                     <label for="nCharge">Modèle de compactage</label>
                     <div class="select-wrap">
                       <select id="nCharge" onchange="updateChargeBadge()">
-                        <option value="125">Prestataire de compactage — $125/compactage</option>
-                        <option value="35">Votre propre unité Packmat — $35/compactage</option>
+                        <option value="125">Prestataire de compactage — 125 $US/compactage</option>
+                        <option value="35">Votre propre unité Packmat — 35 $US/compactage</option>
                       </select>
                     </div>
-                    <span class="charge-badge" id="chargeBadge">$125 / compactage</span>
+                    <span class="charge-badge" id="chargeBadge">125 $US / compactage</span>
                   </div>
                 </div>
               </div>
@@ -564,15 +564,15 @@
               <!-- Blurred placeholder -->
               <div class="locked-preview">
                 <div class="live-box">
-                  <div class="live-row"><span class="lbl">Recettes de compactage</span><span class="c-green">$00,000</span></div>
-                  <div class="live-row"><span class="lbl">Heures camion économisées</span><span class="c-dark">000.0 h</span></div>
-                  <div class="live-row"><span class="lbl">Économies de coûts</span><span class="c-green">$00,000</span></div>
-                  <div class="live-row"><span class="lbl">Coût du compactage</span><span class="c-red">-$00,000</span></div>
-                  <div class="live-row"><span class="lbl">Bénéfice du compactage</span><span class="c-green">$00,000</span></div>
+                  <div class="live-row"><span class="lbl">Recettes de compactage</span><span class="c-green">00 000 $US</span></div>
+                  <div class="live-row"><span class="lbl">Heures camion économisées</span><span class="c-dark">000,0 h</span></div>
+                  <div class="live-row"><span class="lbl">Économies de coûts</span><span class="c-green">00 000 $US</span></div>
+                  <div class="live-row"><span class="lbl">Coût du compactage</span><span class="c-red">-00 000 $US</span></div>
+                  <div class="live-row"><span class="lbl">Bénéfice du compactage</span><span class="c-green">00 000 $US</span></div>
                 </div>
                 <div class="total-strip">
                   <span class="lbl">Valeur mensuelle totale</span>
-                  <span class="val">$00,000</span>
+                  <span class="val">00 000 $US</span>
                 </div>
               </div>
 
@@ -609,28 +609,28 @@
             </svg>
           </div>
           <p class="result-sub">Votre valeur mensuelle estimée</p>
-          <div class="result-big" id="p3Total">$0</div>
+          <div class="result-big" id="p3Total">0 $US</div>
           <div class="result-foot">D'après vos chiffres · 22 jours ouvrés/mois</div>
         </div>
 
         <div class="result-body">
           <div class="kpi-row">
             <div class="kpi-tile"><div class="kpi-num" id="p3Hours">0</div><div class="kpi-lbl">Heures camion économisées / mois</div></div>
-            <div class="kpi-tile"><div class="kpi-num" id="p3Savings">$0</div><div class="kpi-lbl">Économies / mois</div></div>
-            <div class="kpi-tile"><div class="kpi-num" id="p3Profit">$0</div><div class="kpi-lbl">Bénéfice compactage / mois</div></div>
+            <div class="kpi-tile"><div class="kpi-num" id="p3Savings">0 $US</div><div class="kpi-lbl">Économies / mois</div></div>
+            <div class="kpi-tile"><div class="kpi-num" id="p3Profit">0 $US</div><div class="kpi-lbl">Bénéfice compactage / mois</div></div>
           </div>
 
           <div class="vs-row">
             <div class="vs-col">
-              <div class="vs-num-x" id="p3PartnerVal">$0</div>
+              <div class="vs-num-x" id="p3PartnerVal">0 $US</div>
               <div class="vs-lbl">Modèle partenaire</div>
-              <div class="vs-sub">$125 / compactage</div>
+              <div class="vs-sub">125 $US / compactage</div>
             </div>
             <div class="vs-sep">VS</div>
             <div class="vs-col">
-              <div class="vs-num-g" id="p3PackmatVal">$0</div>
+              <div class="vs-num-g" id="p3PackmatVal">0 $US</div>
               <div class="vs-lbl">Votre propre Packmat</div>
-              <div class="vs-sub">$35 / compactage</div>
+              <div class="vs-sub">35 $US / compactage</div>
             </div>
           </div>
 
@@ -661,13 +661,14 @@
   // ════════════════════════════════════════════════
 
   const DAYS = 22;
-  const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
+  const fmt  = n => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Math.round(n));
+  const fmtNum = n => new Intl.NumberFormat('fr-FR').format(n);
 
   // ─ Update the cost badge under the dropdown
   function updateChargeBadge() {
     const sel = document.getElementById('nCharge');
     const val = +sel.value;
-    document.getElementById('chargeBadge').textContent = '$' + val + ' / compactage';
+    document.getElementById('chargeBadge').textContent = fmt(val) + ' / compactage';
   }
 
   // ─ Core calculation
@@ -751,7 +752,7 @@
 
     // Populate Phase 3
     document.getElementById('p3Total').textContent      = fmt(r.total);
-    document.getElementById('p3Hours').textContent      = Math.round(r.hours);
+    document.getElementById('p3Hours').textContent      = fmtNum(Math.round(r.hours));
     document.getElementById('p3Savings').textContent    = fmt(r.savings);
     document.getElementById('p3Profit').textContent     = fmt(r.profit);
     document.getElementById('p3PartnerVal').textContent = fmt(rPartner.total);
